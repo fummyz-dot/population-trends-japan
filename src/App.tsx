@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { DataSourceNotice } from './components/DataSourceNotice'
+import { CsvDownloadButton } from './components/CsvDownloadButton'
 import { MetricSelector } from './components/MetricSelector'
 import { PopulationChart } from './components/PopulationChart'
 import { PopulationSummary } from './components/PopulationSummary'
@@ -66,6 +67,11 @@ function App() {
             />
             <PopulationSummary records={metricRecords} selected={selectedPrefectures} />
             <PopulationTable records={metricRecords} selected={selectedPrefectures} />
+            <CsvDownloadButton
+              metadata={data.metadata}
+              records={metricRecords}
+              selected={selectedPrefectures}
+            />
             <DataSourceNotice metadata={data.metadata} />
           </>
         )}

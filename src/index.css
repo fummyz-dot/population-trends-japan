@@ -248,6 +248,23 @@ td code { padding: 2px 5px; border-radius: 4px; background: var(--surface-soft);
   background: var(--warning-bg);
   color: var(--warning-text);
 }
+
+.download-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px 28px;
+  padding: 24px 28px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.download-panel h2 { font-size: 1.25rem; }
+.download-panel p:not(.section-label, .download-error) { margin: 8px 0 0; color: var(--text-muted); font-size: 0.79rem; line-height: 1.7; }
+.download-button { min-height: 44px; padding: 10px 18px; border: 1px solid var(--accent); border-radius: 10px; background: var(--accent); color: var(--surface); cursor: pointer; font-weight: 700; }
+.download-button:hover { filter: brightness(1.08); }
+.download-error { grid-column: 1 / -1; margin: 0; color: var(--danger-text); font-size: 0.8rem; }
 .source-icon { display: grid; flex: 0 0 28px; width: 28px; height: 28px; place-items: center; border-radius: 50%; background: #d49c12; color: #fff; font-family: 'Outfit', sans-serif; font-weight: 700; }
 .source-panel h2 { color: inherit; font-size: 1rem; }
 .source-panel p, .source-panel li { font-size: 0.79rem; line-height: 1.75; }
@@ -290,6 +307,8 @@ footer p { margin-bottom: 0; }
   .chart-container { height: 420px; min-height: 0; margin-left: -8px; width: calc(100% + 8px); }
   .summary-grid { grid-template-columns: 1fr; }
   .source-panel { padding: 18px 15px; }
+  .download-panel { grid-template-columns: 1fr; padding: 20px 18px; }
+  .download-button { width: 100%; }
   .source-meta { flex-direction: column; }
 }
 
