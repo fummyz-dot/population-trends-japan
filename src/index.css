@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap');
+
+:root {
+  font-family: 'Noto Sans JP', sans-serif;
+  color: #16251f;
+  background: #f5f7f4;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+h1, h2, p { margin-top: 0; }
+
+.hero {
+  overflow: hidden;
+  position: relative;
+  padding: 84px 24px 92px;
+  color: #f8fffb;
+  background: radial-gradient(circle at 82% 18%, rgb(92 178 153 / 28%), transparent 25%),
+    linear-gradient(125deg, #123b32 0%, #0d5a50 58%, #177a70 100%);
+}
+
+.hero::after {
+  position: absolute;
+  right: -80px;
+  bottom: -180px;
+  width: 420px;
+  height: 420px;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 64px rgb(255 255 255 / 4%), 0 0 0 128px rgb(255 255 255 / 3%);
+  content: '';
+}
+
+.hero__inner, .content { width: min(1120px, 100%); margin: 0 auto; }
+.hero__inner { position: relative; z-index: 1; }
+
+.eyebrow, .section-label {
+  margin: 0 0 14px;
+  color: #97d9c6;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+h1 {
+  margin-bottom: 24px;
+  font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+  font-size: clamp(2.5rem, 7vw, 4.8rem);
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+}
+
+.lead {
+  max-width: 650px;
+  margin-bottom: 0;
+  color: #dcece6;
+  font-size: clamp(1rem, 2vw, 1.12rem);
+  line-height: 2;
+}
+
+.content { padding: 68px 24px 80px; }
+
+.section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.section-label { margin-bottom: 8px; color: #198270; }
+h2 { margin-bottom: 0; font-size: clamp(1.7rem, 4vw, 2.35rem); letter-spacing: -0.04em; }
+.unit { margin-bottom: 4px; color: #66736d; font-size: 0.85rem; }
+
+.prefecture-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+}
+
+.prefecture-list li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px;
+  border: 1px solid #dce4df;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 0.87rem;
+  font-weight: 600;
+}
+
+.color-dot { width: 8px; height: 8px; border-radius: 50%; }
+.prefecture-code { color: #78857f; font-family: 'Outfit', sans-serif; font-size: 0.78rem; }
+
+.chart-card {
+  width: 100%;
+  height: min(55vw, 520px);
+  min-height: 350px;
+  padding: 26px 20px 16px 6px;
+  border: 1px solid #e1e8e4;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 18px 50px rgb(38 64 52 / 8%);
+}
+
+.notice {
+  display: flex;
+  gap: 14px;
+  margin-top: 22px;
+  padding: 18px 20px;
+  border: 1px solid #ead8a5;
+  border-radius: 12px;
+  background: #fff9e9;
+  color: #5c4a19;
+}
+
+.notice__mark {
+  display: grid;
+  flex: 0 0 25px;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  border-radius: 50%;
+  background: #d49c12;
+  color: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+}
+
+.notice strong { display: block; margin-bottom: 4px; font-size: 0.92rem; }
+.notice p { margin-bottom: 0; font-size: 0.84rem; line-height: 1.7; }
+
+.status {
+  padding: 56px 20px;
+  border-radius: 16px;
+  background: #fff;
+  color: #66736d;
+  text-align: center;
+}
+
+.status--error { color: #a13e2a; background: #fff0ec; }
+
+footer {
+  padding: 24px;
+  border-top: 1px solid #dce4df;
+  color: #74817b;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+footer p { margin-bottom: 0; }
+
+@media (max-width: 640px) {
+  .hero { padding: 64px 20px 70px; }
+  .content { padding: 48px 16px 60px; }
+  .section-heading { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .prefecture-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .chart-card { height: 420px; min-height: 0; padding: 18px 4px 10px 0; border-radius: 12px; }
+  .notice { padding: 16px; }
+}
+
+@media (max-width: 380px) {
+  .prefecture-list { grid-template-columns: 1fr; }
+}
