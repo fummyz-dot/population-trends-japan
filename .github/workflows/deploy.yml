@@ -1,0 +1,100 @@
+name: Deploy to Cloudflare Workers
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Verify and deploy production assets
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Show Node.js and npm versions
+        run: |
+          set -euo pipefail
+          node --version
+          npm --version
+
+      - name: Install dependencies
+        run: |
+          set -euo pipefail
+          npm ci
+
+      - name: Show Wrangler version
+        run: |
+          set -euo pipefail
+          npx wrangler --version
+
+      - name: Run lint
+        run: |
+          set -euo pipefail
+          npm run lint
+
+      - name: Run unit tests
+        run: |
+          set -euo pipefail
+          npm test -- --run
+
+      - name: Validate population data
+        run: |
+          set -euo pipefail
+          npm run data:validate
+
+      - name: Build production assets
+        run: |
+          set -euo pipefail
+          npm run build
+
+      - name: Verify build artifacts
+        run: |
+          set -euo pipefail
+          test -f dist/index.html
+          test -f dist/data/population.json
+          test -d dist/assets
+
+      - name: Scan build artifacts for secret markers
+        run: |
+          set -euo pipefail
+          for marker in \
+            ESTAT_APP_ID \
+            CLOUDFLARE_API_TOKEN \
+            CLOUDFLARE_ACCOUNT_ID \
+            'appId='
+          do
+            if grep --recursive --quiet --fixed-strings --binary-files=without-match -- "$marker" dist; then
+              echo "Forbidden secret marker found in dist: $marker" >&2
+              exit 1
+            fi
+          done
+
+      - name: Run Wrangler deploy dry-run
+        run: |
+          set -euo pipefail
+          npx wrangler deploy --dry-run
+
+      - name: Deploy to Cloudflare Workers
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          npx wrangler deploy
