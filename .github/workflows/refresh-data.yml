@@ -15,7 +15,7 @@ jobs:
   refresh:
     name: Fetch, verify, and propose population data
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
 
     steps:
       - name: Check out main
@@ -23,7 +23,7 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ github.token }}
 
       - name: Set up Node.js 24
         uses: actions/setup-node@v6
@@ -38,47 +38,28 @@ jobs:
           node --version
           npm --version
           gh --version
+          git --version
 
       - name: Install dependencies
         run: |
           set -euo pipefail
           npm ci
 
-      - name: Record current data summary
+      - name: Record data summary before update
         id: before
         run: |
           set -euo pipefail
           node <<'NODE'
           const { appendFileSync, readFileSync } = require('node:fs')
           const data = JSON.parse(readFileSync('public/data/population.json', 'utf8'))
-          appendFileSync(process.env.GITHUB_OUTPUT, `to_year=${data.metadata.toYear}\n`)
-          appendFileSync(process.env.GITHUB_OUTPUT, `record_count=${data.records.length}\n`)
+          const output = [
+            `from_year=${data.metadata.fromYear}`,
+            `to_year=${data.metadata.toYear}`,
+            `record_count=${data.records.length}`,
+            `stats_data_ids=${data.metadata.statsDataIds.join(', ')}`,
+          ].join('\n')
+          appendFileSync(process.env.GITHUB_OUTPUT, `${output}\n`)
           NODE
-
-      - name: Prepare update branch
-        env:
-          UPDATE_BRANCH: automation/refresh-population-data
-        run: |
-          set -euo pipefail
-          git fetch origin main
-
-          if git ls-remote --exit-code --heads origin "$UPDATE_BRANCH" > /dev/null 2>&1; then
-            git fetch origin "$UPDATE_BRANCH:refs/remotes/origin/$UPDATE_BRANCH"
-            git switch --create "$UPDATE_BRANCH" --track "origin/$UPDATE_BRANCH"
-
-            unexpected_branch_files="$({
-              git diff --name-only origin/main...HEAD
-            } | awk 'NF && $0 != "public/data/population.json"')"
-            if [[ -n "$unexpected_branch_files" ]]; then
-              echo "Unexpected files already exist on the update branch:" >&2
-              printf '%s\n' "$unexpected_branch_files" >&2
-              exit 1
-            fi
-
-            git rebase origin/main
-          else
-            git switch --create "$UPDATE_BRANCH" origin/main
-          fi
 
       - name: Fetch population data from e-Stat
         env:
@@ -92,15 +73,15 @@ jobs:
           set -euo pipefail
           npm run data:validate
 
-      - name: Run unit tests
-        run: |
-          set -euo pipefail
-          npm test -- --run
-
       - name: Run lint
         run: |
           set -euo pipefail
           npm run lint
+
+      - name: Run unit tests
+        run: |
+          set -euo pipefail
+          npm test -- --run
 
       - name: Build production assets
         run: |
@@ -112,8 +93,14 @@ jobs:
         run: |
           set -euo pipefail
 
+          if ! git check-ignore --quiet dist/index.html; then
+            echo "dist must remain ignored by Git." >&2
+            exit 1
+          fi
+
           changed_files="$({
             git diff --name-only
+            git diff --cached --name-only
             git ls-files --others --exclude-standard
           } | sort -u)"
           unexpected_files="$(printf '%s\n' "$changed_files" | awk 'NF && $0 != "public/data/population.json"')"
@@ -124,81 +111,115 @@ jobs:
             exit 1
           fi
 
-          if git diff --quiet -- public/data/population.json; then
+          if git diff --quiet -- public/data/population.json &&
+            git diff --cached --quiet -- public/data/population.json; then
             echo "No population data changes detected."
-            echo "data_changed=false" >> "$GITHUB_OUTPUT"
-            if git diff --quiet origin/main...HEAD -- public/data/population.json; then
-              echo "proposal_needed=false" >> "$GITHUB_OUTPUT"
-            else
-              echo "The update branch already contains population data changes."
-              echo "proposal_needed=true" >> "$GITHUB_OUTPUT"
-            fi
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
           echo "Population data changes detected."
           git diff --stat -- public/data/population.json
-          echo "data_changed=true" >> "$GITHUB_OUTPUT"
-          echo "proposal_needed=true" >> "$GITHUB_OUTPUT"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
 
-      - name: Create Pull Request body
-        if: steps.changes.outputs.proposal_needed == 'true'
-        env:
-          BEFORE_TO_YEAR: ${{ steps.before.outputs.to_year }}
-          BEFORE_RECORD_COUNT: ${{ steps.before.outputs.record_count }}
+      - name: Record data summary after update
+        if: steps.changes.outputs.changed == 'true'
+        id: after
         run: |
           set -euo pipefail
           node <<'NODE'
-          const { readFileSync, writeFileSync } = require('node:fs')
+          const { appendFileSync, readFileSync } = require('node:fs')
           const data = JSON.parse(readFileSync('public/data/population.json', 'utf8'))
           const prefectureCount = new Set(
             data.records.map((record) => record.prefectureCode),
           ).size
+          const output = [
+            `from_year=${data.metadata.fromYear}`,
+            `to_year=${data.metadata.toYear}`,
+            `record_count=${data.records.length}`,
+            `stats_data_ids=${data.metadata.statsDataIds.join(', ')}`,
+            `prefecture_count=${prefectureCount}`,
+          ].join('\n')
+          appendFileSync(process.env.GITHUB_OUTPUT, `${output}\n`)
+          NODE
+
+      - name: Create Pull Request body
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          BEFORE_FROM_YEAR: ${{ steps.before.outputs.from_year }}
+          BEFORE_TO_YEAR: ${{ steps.before.outputs.to_year }}
+          BEFORE_RECORD_COUNT: ${{ steps.before.outputs.record_count }}
+          AFTER_FROM_YEAR: ${{ steps.after.outputs.from_year }}
+          AFTER_TO_YEAR: ${{ steps.after.outputs.to_year }}
+          AFTER_RECORD_COUNT: ${{ steps.after.outputs.record_count }}
+          AFTER_STATS_DATA_IDS: ${{ steps.after.outputs.stats_data_ids }}
+          AFTER_PREFECTURE_COUNT: ${{ steps.after.outputs.prefecture_count }}
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const { writeFileSync } = require('node:fs')
           const body = `## 更新概要
 
           e-Stat APIから人口統計を自動取得し、検証済みデータを更新します。
 
           | 項目 | 更新前 | 更新後 |
           | --- | ---: | ---: |
-          | 最新年 | ${process.env.BEFORE_TO_YEAR} | ${data.metadata.toYear} |
-          | レコード数 | ${process.env.BEFORE_RECORD_COUNT} | ${data.records.length} |
+          | 対象年 | ${process.env.BEFORE_FROM_YEAR}～${process.env.BEFORE_TO_YEAR} | ${process.env.AFTER_FROM_YEAR}～${process.env.AFTER_TO_YEAR} |
+          | 最新年 | ${process.env.BEFORE_TO_YEAR} | ${process.env.AFTER_TO_YEAR} |
+          | レコード数 | ${process.env.BEFORE_RECORD_COUNT} | ${process.env.AFTER_RECORD_COUNT} |
 
-          - 対象都道府県数: ${prefectureCount}
-          - 使用したstatsDataIds: ${data.metadata.statsDataIds.join(', ')}
-          - 変更ファイル: \`public/data/population.json\`
+          - 対象都道府県数: ${process.env.AFTER_PREFECTURE_COUNT}
+          - 使用したstatsDataIds: ${process.env.AFTER_STATS_DATA_IDS}
+          - 変更ファイル: \`public/data/population.json\` のみ
 
           ## 検証結果
 
           - \`npm run data:validate\`: 成功
+          - \`npm run lint\`: 成功
           - \`npm test -- --run\`: 成功
           - \`npm run build\`: 成功
 
-          ## 注意事項
+          ## 確認事項
 
           - このPull Requestは自動マージしません。
-          - 2025年以降のデータは、統計表IDやe-Statの提供形式の変更などにより自動追加できない可能性があります。
+          - 人口値と系列接続を人間が確認してからマージしてください。
+          - 2025年以降のデータは、統計表IDや時間コードの変更により自動追加できない可能性があります。
           `
           writeFileSync('.git/refresh-data-pr-body.md', body.replace(/^ {10}/gm, ''))
           NODE
 
       - name: Commit population data
-        if: steps.changes.outputs.data_changed == 'true'
+        if: steps.changes.outputs.changed == 'true'
         env:
           UPDATE_BRANCH: automation/refresh-population-data
         run: |
           set -euo pipefail
+
+          if git ls-remote --exit-code --heads origin "$UPDATE_BRANCH" > /dev/null 2>&1; then
+            git fetch origin "+refs/heads/$UPDATE_BRANCH:refs/remotes/origin/$UPDATE_BRANCH"
+          fi
+
+          git switch --force-create "$UPDATE_BRANCH" main
           if [[ "$(git branch --show-current)" != "$UPDATE_BRANCH" ]]; then
             echo "Refusing to commit outside $UPDATE_BRANCH" >&2
             exit 1
           fi
 
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -- public/data/population.json
+
+          staged_files="$(git diff --cached --name-only)"
+          if [[ "$staged_files" != "public/data/population.json" ]]; then
+            echo "Only public/data/population.json may be committed." >&2
+            printf '%s\n' "$staged_files" >&2
+            exit 1
+          fi
+
           git commit -m "data: refresh population statistics"
 
       - name: Push update branch
-        if: steps.changes.outputs.data_changed == 'true'
+        if: steps.changes.outputs.changed == 'true'
         env:
           UPDATE_BRANCH: automation/refresh-population-data
         run: |
@@ -210,9 +231,9 @@ jobs:
           git push --force-with-lease origin "HEAD:refs/heads/$UPDATE_BRANCH"
 
       - name: Create Pull Request if needed
-        if: steps.changes.outputs.proposal_needed == 'true'
+        if: steps.changes.outputs.changed == 'true'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           UPDATE_BRANCH: automation/refresh-population-data
         run: |
           set -euo pipefail
