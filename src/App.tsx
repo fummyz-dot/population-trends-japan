@@ -19,7 +19,8 @@ function App() {
   )
 
   return (
-    <main>
+    <>
+      <a className="skip-link" href="#main-content">メインコンテンツへ移動</a>
       <header className="hero">
         <div className="hero__inner">
           <p className="eyebrow">POPULATION TRENDS IN JAPAN</p>
@@ -37,7 +38,7 @@ function App() {
         </div>
       </header>
 
-      <div className="content">
+      <main id="main-content" className="content" tabIndex={-1}>
         {loading && (
           <div className="status" role="status" aria-live="polite">
             <span className="status-spinner" aria-hidden="true" />
@@ -75,10 +76,10 @@ function App() {
             <DataSourceNotice metadata={data.metadata} />
           </>
         )}
-      </div>
+      </main>
 
       <footer><p>都道府県人口推移 — Population data explorer</p></footer>
-    </main>
+    </>
   )
 }
 

@@ -26,6 +26,11 @@ describe('App', () => {
     render(<App />)
 
     expect(await screen.findByRole('heading', { name: '人口推移を比較' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'メインコンテンツへ移動' })).toHaveAttribute(
+      'href',
+      '#main-content',
+    )
+    expect(screen.getByRole('main')).toHaveAttribute('id', 'main-content')
     expect(screen.getByRole('checkbox', { name: /北海道/ })).toBeChecked()
     expect(screen.getByRole('checkbox', { name: /東京都/ })).toBeChecked()
     expect(screen.getByRole('checkbox', { name: /大阪府/ })).not.toBeChecked()
