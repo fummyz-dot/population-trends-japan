@@ -1,12 +1,11 @@
-import { mkdir, readFile, rename, unlink, writeFile } from 'node:fs/promises'
-import { dirname, resolve } from 'node:path'
+import { resolve } from 'node:path'
 import { createEstatClient } from './lib/estat-client.mjs'
+import { updatePopulationFile } from './lib/population-comparison.mjs'
 import {
   SERIES_SOURCES,
   TARGET_PREFECTURES,
   buildPopulationData,
   recordsFromEstatResponse,
-  validatePopulationData,
 } from './lib/population-schema.mjs'
 
 const outputPath = resolve('public/data/population.json')
@@ -43,20 +42,14 @@ async function main() {
     )
   }
 
-  const data = buildPopulationData(records)
-  await mkdir(dirname(outputPath), { recursive: true })
-  await writeFile(temporaryPath, `${JSON.stringify(data, null, 2)}\n`, 'utf8')
-
-  const temporaryData = JSON.parse(await readFile(temporaryPath, 'utf8'))
-  const { errors, warnings } = validatePopulationData(temporaryData)
-  warnings.forEach((warning) => console.warn(`警告: ${warning}`))
-  if (errors.length > 0) {
-    errors.forEach((error) => console.error(`検証エラー: ${error}`))
-    throw new Error(`生成データの検証に失敗しました (${errors.length}件)`)
+  const data = buildPopulationData(records, '1970-01-01T00:00:00.000Z')
+  const result = await updatePopulationFile({ nextData: data, outputPath, temporaryPath })
+  result.warnings.forEach((warning) => console.warn(`警告: ${warning}`))
+  if (result.changed) {
+    console.log(`生成完了: ${outputPath}`)
+  } else {
+    console.log('Population data has no substantive changes.')
   }
-
-  await rename(temporaryPath, outputPath)
-  console.log(`生成完了: ${outputPath}`)
   console.log(`APIリクエスト数: ${client.requestCount}`)
   console.log(`年範囲: ${data.metadata.fromYear}～${data.metadata.toYear}`)
   console.log(`レコード数: ${data.records.length}`)
@@ -67,8 +60,4 @@ try {
 } catch (error) {
   console.error(`人口データの取得に失敗しました: ${error.message}`)
   process.exitCode = 1
-} finally {
-  await unlink(temporaryPath).catch((error) => {
-    if (error.code !== 'ENOENT') console.warn(`一時ファイルを削除できませんでした: ${error.message}`)
-  })
 }
