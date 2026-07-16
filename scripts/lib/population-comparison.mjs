@@ -4,9 +4,7 @@ import { validatePopulationData } from './population-schema.mjs'
 
 function canonicalize(value) {
   if (Array.isArray(value)) {
-    return value
-      .map(canonicalize)
-      .sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)))
+    return value.map(canonicalize)
   }
 
   if (value !== null && typeof value === 'object') {
@@ -31,6 +29,16 @@ export function normalizePopulationForComparison(data) {
   ) {
     delete comparableData.metadata.generatedAt
   }
+
+  // recordsの入力順はデータの意味に含めず、仕様上のyear、prefectureCode順で比較する。
+  if (Array.isArray(comparableData?.records)) {
+    comparableData.records.sort(
+      (a, b) => a.year - b.year || String(a.prefectureCode).localeCompare(String(b.prefectureCode)),
+    )
+  }
+
+  // statsDataIdsは取得元の優先順、seriesPolicyは適用順、notesは表示順に意味があるため、
+  // これらの配列順は正規化せず、そのまま比較対象に含める。
 
   return canonicalize(comparableData)
 }

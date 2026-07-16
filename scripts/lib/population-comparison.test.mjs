@@ -76,37 +76,115 @@ describe('hasSubstantivePopulationChanges', () => {
     expect(hasSubstantivePopulationChanges(current, next)).toBe(false)
   })
 
-  it('1レコードの人口の差を変更と判断する', () => {
+  it('1レコードのpopulationThousandの差を変更と判断する', () => {
+    const current = validData()
+    const next = clone(current)
+    next.records[0].populationThousand += 1
+    expect(hasSubstantivePopulationChanges(current, next)).toBe(true)
+  })
+
+  it('1レコードのpopulationの差を変更と判断する', () => {
     const current = validData()
     const next = clone(current)
     next.records[0].population += 1_000
     expect(hasSubstantivePopulationChanges(current, next)).toBe(true)
   })
 
-  it.each([
-    ['metadata.toYear', (data) => {
-      data.metadata.toYear += 1
-    }],
-    ['metadata.statsDataIds', (data) => {
-      data.metadata.statsDataIds.push('new-id')
-    }],
-    ['metadata.notes', (data) => {
-      data.metadata.notes.push('新しい注記')
-    }],
-  ])('%sの差を変更と判断する', (_name, mutate) => {
+  it('metadata.toYearの差を変更と判断する', () => {
     const current = validData()
     const next = clone(current)
-    mutate(next)
+    next.metadata.toYear += 1
     expect(hasSubstantivePopulationChanges(current, next)).toBe(true)
   })
 
-  it('配列順とオブジェクトのキー順だけの差を変更なしと判断する', () => {
+  it.each([
+    ['title', '変更後のタイトル'],
+    ['source', '変更後の出典'],
+    ['api', '変更後のAPI'],
+    ['referenceDate', '変更後の基準日'],
+    ['populationCategory', '変更後の人口区分'],
+    ['sexCategory', '変更後の性別区分'],
+    ['sourceUnit', '人'],
+    ['derivedDisplayUnit', '千人'],
+    ['precision', 1],
+    ['fromYear', 2014],
+  ])('metadata.%sの差を変更と判断する', (key, value) => {
+    const current = validData()
+    const next = clone(current)
+    next.metadata[key] = value
+    expect(hasSubstantivePopulationChanges(current, next)).toBe(true)
+  })
+
+  it('metadata.statsDataIdsの差を変更と判断する', () => {
+    const current = validData()
+    const next = clone(current)
+    next.metadata.statsDataIds[0] = 'new-id'
+    expect(hasSubstantivePopulationChanges(current, next)).toBe(true)
+  })
+
+  it('metadata.seriesPolicyの差を変更と判断する', () => {
+    const current = validData()
+    const next = clone(current)
+    next.metadata.seriesPolicy[0].toYear += 1
+    expect(hasSubstantivePopulationChanges(current, next)).toBe(true)
+  })
+
+  it('metadata.notesの差を変更と判断する', () => {
+    const current = validData()
+    const next = clone(current)
+    next.metadata.notes[0] = '変更後の注記'
+    expect(hasSubstantivePopulationChanges(current, next)).toBe(true)
+  })
+
+  it('レコードの入力順だけの差を変更なしと判断する', () => {
+    const current = validData()
+    const next = clone(current)
+    next.records.reverse()
+    expect(hasSubstantivePopulationChanges(current, next)).toBe(false)
+  })
+
+  it('レコードが1件欠けた差を変更と判断する', () => {
+    const current = validData()
+    const next = clone(current)
+    next.records.pop()
+    expect(hasSubstantivePopulationChanges(current, next)).toBe(true)
+  })
+
+  it('都道府県コードの差を変更と判断する', () => {
+    const current = validData()
+    const next = clone(current)
+    next.records[0].prefectureCode = '99'
+    expect(hasSubstantivePopulationChanges(current, next)).toBe(true)
+  })
+
+  it.each([
+    ['year', 2014],
+    ['estatAreaCode', '99999'],
+    ['prefecture', '変更後の名称'],
+  ])('レコードの%sの差を変更と判断する', (key, value) => {
+    const current = validData()
+    const next = clone(current)
+    next.records[0][key] = value
+    expect(hasSubstantivePopulationChanges(current, next)).toBe(true)
+  })
+
+  it('sourceStatsDataIdの差を変更と判断する', () => {
+    const current = validData()
+    const next = clone(current)
+    next.records[0].sourceStatsDataId = 'new-id'
+    expect(hasSubstantivePopulationChanges(current, next)).toBe(true)
+  })
+
+  it('seriesTypeの差を変更と判断する', () => {
+    const current = validData()
+    const next = clone(current)
+    next.records[0].seriesType = 'population-estimate'
+    expect(hasSubstantivePopulationChanges(current, next)).toBe(true)
+  })
+
+  it('オブジェクトのキー順だけの差を変更なしと判断する', () => {
     const current = validData()
     const next = reverseObjectKeyOrder(current)
-    next.metadata.statsDataIds.reverse()
-    next.metadata.seriesPolicy.reverse()
-    next.metadata.notes.reverse()
-    next.records.reverse()
     expect(hasSubstantivePopulationChanges(current, next)).toBe(false)
   })
 })
