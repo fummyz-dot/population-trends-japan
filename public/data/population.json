@@ -1,17 +1,539 @@
 {
   "metadata": {
-    "title": "都道府県人口推移（画面確認用）",
-    "isSample": true,
-    "notice": "このデータは画面確認のために作成した架空のサンプルデータです。実際の統計値ではありません。",
-    "unit": "千人",
-    "startYear": 2015,
-    "endYear": 2024
+    "title": "都道府県別人口推移",
+    "source": "総務省統計局 人口推計",
+    "api": "政府統計の総合窓口（e-Stat）API",
+    "referenceDate": "各年10月1日現在",
+    "populationCategory": "総人口",
+    "sexCategory": "男女計",
+    "sourceUnit": "千人",
+    "derivedDisplayUnit": "人",
+    "precision": 1000,
+    "fromYear": 2015,
+    "toYear": 2024,
+    "generatedAt": "2026-07-16T04:13:29.747Z",
+    "statsDataIds": [
+      "0004021102",
+      "0003448232"
+    ],
+    "seriesPolicy": [
+      {
+        "fromYear": 2015,
+        "toYear": 2020,
+        "statsDataId": "0004021102"
+      },
+      {
+        "fromYear": 2021,
+        "toYear": 2024,
+        "statsDataId": "0003448232"
+      }
+    ],
+    "notes": [
+      "2016年から2019年は令和2年国勢調査結果に基づく補間補正人口です。",
+      "2015年と2020年は国勢調査を基にした接続年です。",
+      "populationは千人単位の原値を1000倍した派生値です。"
+    ]
   },
-  "prefectures": [
-    { "code": "01", "name": "北海道", "values": [5382, 5348, 5312, 5274, 5236, 5192, 5150, 5108, 5064, 5018] },
-    { "code": "13", "name": "東京都", "values": [13520, 13640, 13760, 13870, 13960, 14020, 14060, 14110, 14170, 14230] },
-    { "code": "27", "name": "大阪府", "values": [8840, 8828, 8815, 8800, 8782, 8758, 8732, 8705, 8676, 8645] },
-    { "code": "40", "name": "福岡県", "values": [5100, 5112, 5124, 5136, 5148, 5158, 5168, 5176, 5184, 5190] },
-    { "code": "47", "name": "沖縄県", "values": [1434, 1441, 1448, 1454, 1460, 1465, 1469, 1473, 1476, 1478] }
+  "records": [
+    {
+      "year": 2015,
+      "prefectureCode": "01",
+      "estatAreaCode": "01000",
+      "prefecture": "北海道",
+      "populationThousand": 5382,
+      "population": 5382000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "census-anchor"
+    },
+    {
+      "year": 2015,
+      "prefectureCode": "13",
+      "estatAreaCode": "13000",
+      "prefecture": "東京都",
+      "populationThousand": 13515,
+      "population": 13515000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "census-anchor"
+    },
+    {
+      "year": 2015,
+      "prefectureCode": "27",
+      "estatAreaCode": "27000",
+      "prefecture": "大阪府",
+      "populationThousand": 8839,
+      "population": 8839000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "census-anchor"
+    },
+    {
+      "year": 2015,
+      "prefectureCode": "40",
+      "estatAreaCode": "40000",
+      "prefecture": "福岡県",
+      "populationThousand": 5102,
+      "population": 5102000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "census-anchor"
+    },
+    {
+      "year": 2015,
+      "prefectureCode": "47",
+      "estatAreaCode": "47000",
+      "prefecture": "沖縄県",
+      "populationThousand": 1434,
+      "population": 1434000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "census-anchor"
+    },
+    {
+      "year": 2016,
+      "prefectureCode": "01",
+      "estatAreaCode": "01000",
+      "prefecture": "北海道",
+      "populationThousand": 5355,
+      "population": 5355000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2016,
+      "prefectureCode": "13",
+      "estatAreaCode": "13000",
+      "prefecture": "東京都",
+      "populationThousand": 13646,
+      "population": 13646000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2016,
+      "prefectureCode": "27",
+      "estatAreaCode": "27000",
+      "prefecture": "大阪府",
+      "populationThousand": 8841,
+      "population": 8841000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2016,
+      "prefectureCode": "40",
+      "estatAreaCode": "40000",
+      "prefecture": "福岡県",
+      "populationThousand": 5113,
+      "population": 5113000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2016,
+      "prefectureCode": "47",
+      "estatAreaCode": "47000",
+      "prefecture": "沖縄県",
+      "populationThousand": 1442,
+      "population": 1442000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2017,
+      "prefectureCode": "01",
+      "estatAreaCode": "01000",
+      "prefecture": "北海道",
+      "populationThousand": 5325,
+      "population": 5325000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2017,
+      "prefectureCode": "13",
+      "estatAreaCode": "13000",
+      "prefecture": "東京都",
+      "populationThousand": 13768,
+      "population": 13768000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2017,
+      "prefectureCode": "27",
+      "estatAreaCode": "27000",
+      "prefecture": "大阪府",
+      "populationThousand": 8841,
+      "population": 8841000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2017,
+      "prefectureCode": "40",
+      "estatAreaCode": "40000",
+      "prefecture": "福岡県",
+      "populationThousand": 5123,
+      "population": 5123000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2017,
+      "prefectureCode": "47",
+      "estatAreaCode": "47000",
+      "prefecture": "沖縄県",
+      "populationThousand": 1448,
+      "population": 1448000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2018,
+      "prefectureCode": "01",
+      "estatAreaCode": "01000",
+      "prefecture": "北海道",
+      "populationThousand": 5293,
+      "population": 5293000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2018,
+      "prefectureCode": "13",
+      "estatAreaCode": "13000",
+      "prefecture": "東京都",
+      "populationThousand": 13887,
+      "population": 13887000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2018,
+      "prefectureCode": "27",
+      "estatAreaCode": "27000",
+      "prefecture": "大阪府",
+      "populationThousand": 8838,
+      "population": 8838000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2018,
+      "prefectureCode": "40",
+      "estatAreaCode": "40000",
+      "prefecture": "福岡県",
+      "populationThousand": 5131,
+      "population": 5131000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2018,
+      "prefectureCode": "47",
+      "estatAreaCode": "47000",
+      "prefecture": "沖縄県",
+      "populationThousand": 1454,
+      "population": 1454000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2019,
+      "prefectureCode": "01",
+      "estatAreaCode": "01000",
+      "prefecture": "北海道",
+      "populationThousand": 5259,
+      "population": 5259000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2019,
+      "prefectureCode": "13",
+      "estatAreaCode": "13000",
+      "prefecture": "東京都",
+      "populationThousand": 14007,
+      "population": 14007000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2019,
+      "prefectureCode": "27",
+      "estatAreaCode": "27000",
+      "prefecture": "大阪府",
+      "populationThousand": 8842,
+      "population": 8842000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2019,
+      "prefectureCode": "40",
+      "estatAreaCode": "40000",
+      "prefecture": "福岡県",
+      "populationThousand": 5134,
+      "population": 5134000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2019,
+      "prefectureCode": "47",
+      "estatAreaCode": "47000",
+      "prefecture": "沖縄県",
+      "populationThousand": 1462,
+      "population": 1462000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "interpolated-adjusted"
+    },
+    {
+      "year": 2020,
+      "prefectureCode": "01",
+      "estatAreaCode": "01000",
+      "prefecture": "北海道",
+      "populationThousand": 5225,
+      "population": 5225000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "census-anchor"
+    },
+    {
+      "year": 2020,
+      "prefectureCode": "13",
+      "estatAreaCode": "13000",
+      "prefecture": "東京都",
+      "populationThousand": 14048,
+      "population": 14048000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "census-anchor"
+    },
+    {
+      "year": 2020,
+      "prefectureCode": "27",
+      "estatAreaCode": "27000",
+      "prefecture": "大阪府",
+      "populationThousand": 8838,
+      "population": 8838000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "census-anchor"
+    },
+    {
+      "year": 2020,
+      "prefectureCode": "40",
+      "estatAreaCode": "40000",
+      "prefecture": "福岡県",
+      "populationThousand": 5135,
+      "population": 5135000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "census-anchor"
+    },
+    {
+      "year": 2020,
+      "prefectureCode": "47",
+      "estatAreaCode": "47000",
+      "prefecture": "沖縄県",
+      "populationThousand": 1467,
+      "population": 1467000,
+      "sourceStatsDataId": "0004021102",
+      "seriesType": "census-anchor"
+    },
+    {
+      "year": 2021,
+      "prefectureCode": "01",
+      "estatAreaCode": "01000",
+      "prefecture": "北海道",
+      "populationThousand": 5183,
+      "population": 5183000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2021,
+      "prefectureCode": "13",
+      "estatAreaCode": "13000",
+      "prefecture": "東京都",
+      "populationThousand": 14010,
+      "population": 14010000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2021,
+      "prefectureCode": "27",
+      "estatAreaCode": "27000",
+      "prefecture": "大阪府",
+      "populationThousand": 8806,
+      "population": 8806000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2021,
+      "prefectureCode": "40",
+      "estatAreaCode": "40000",
+      "prefecture": "福岡県",
+      "populationThousand": 5124,
+      "population": 5124000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2021,
+      "prefectureCode": "47",
+      "estatAreaCode": "47000",
+      "prefecture": "沖縄県",
+      "populationThousand": 1468,
+      "population": 1468000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2022,
+      "prefectureCode": "01",
+      "estatAreaCode": "01000",
+      "prefecture": "北海道",
+      "populationThousand": 5140,
+      "population": 5140000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2022,
+      "prefectureCode": "13",
+      "estatAreaCode": "13000",
+      "prefecture": "東京都",
+      "populationThousand": 14038,
+      "population": 14038000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2022,
+      "prefectureCode": "27",
+      "estatAreaCode": "27000",
+      "prefecture": "大阪府",
+      "populationThousand": 8782,
+      "population": 8782000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2022,
+      "prefectureCode": "40",
+      "estatAreaCode": "40000",
+      "prefecture": "福岡県",
+      "populationThousand": 5116,
+      "population": 5116000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2022,
+      "prefectureCode": "47",
+      "estatAreaCode": "47000",
+      "prefecture": "沖縄県",
+      "populationThousand": 1468,
+      "population": 1468000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2023,
+      "prefectureCode": "01",
+      "estatAreaCode": "01000",
+      "prefecture": "北海道",
+      "populationThousand": 5092,
+      "population": 5092000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2023,
+      "prefectureCode": "13",
+      "estatAreaCode": "13000",
+      "prefecture": "東京都",
+      "populationThousand": 14086,
+      "population": 14086000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2023,
+      "prefectureCode": "27",
+      "estatAreaCode": "27000",
+      "prefecture": "大阪府",
+      "populationThousand": 8763,
+      "population": 8763000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2023,
+      "prefectureCode": "40",
+      "estatAreaCode": "40000",
+      "prefecture": "福岡県",
+      "populationThousand": 5103,
+      "population": 5103000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2023,
+      "prefectureCode": "47",
+      "estatAreaCode": "47000",
+      "prefecture": "沖縄県",
+      "populationThousand": 1468,
+      "population": 1468000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2024,
+      "prefectureCode": "01",
+      "estatAreaCode": "01000",
+      "prefecture": "北海道",
+      "populationThousand": 5043,
+      "population": 5043000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2024,
+      "prefectureCode": "13",
+      "estatAreaCode": "13000",
+      "prefecture": "東京都",
+      "populationThousand": 14178,
+      "population": 14178000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2024,
+      "prefectureCode": "27",
+      "estatAreaCode": "27000",
+      "prefecture": "大阪府",
+      "populationThousand": 8757,
+      "population": 8757000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2024,
+      "prefectureCode": "40",
+      "estatAreaCode": "40000",
+      "prefecture": "福岡県",
+      "populationThousand": 5092,
+      "population": 5092000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    },
+    {
+      "year": 2024,
+      "prefectureCode": "47",
+      "estatAreaCode": "47000",
+      "prefecture": "沖縄県",
+      "populationThousand": 1466,
+      "population": 1466000,
+      "sourceStatsDataId": "0003448232",
+      "seriesType": "population-estimate"
+    }
   ]
 }

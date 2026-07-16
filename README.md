@@ -12,3 +12,11 @@ npm run dev
 ```
 
 ブラウザで、ターミナルに表示されたローカル URL を開いてください。
+
+## 人口データの更新
+
+`.env` に `ESTAT_APP_ID` を設定して実行します。
+
+```bash
+npm run data:refresh
+```

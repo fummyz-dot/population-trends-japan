@@ -12,6 +12,9 @@
     "lint": "eslint .",
     "test": "vitest run",
     "inspect:estat": "node --env-file-if-exists=.env scripts/inspect-estat.mjs",
+    "data:fetch": "node --env-file-if-exists=.env scripts/fetch-population.mjs",
+    "data:validate": "node scripts/validate-population.mjs",
+    "data:refresh": "npm run data:fetch && npm run data:validate",
     "preview": "vite preview"
   },
   "dependencies": {
