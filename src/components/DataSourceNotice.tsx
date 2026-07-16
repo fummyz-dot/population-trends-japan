@@ -1,15 +1,11 @@
 import type { PopulationMetadata } from '../types/population'
+import { formatDateTime } from '../utils/dateTime'
 
 interface DataSourceNoticeProps {
   metadata: PopulationMetadata
 }
 
 export function DataSourceNotice({ metadata }: DataSourceNoticeProps) {
-  const generatedAt = new Intl.DateTimeFormat('ja-JP', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(new Date(metadata.generatedAt))
-
   return (
     <section className="source-panel" aria-labelledby="source-heading">
       <div className="source-icon" aria-hidden="true">i</div>
@@ -26,7 +22,14 @@ export function DataSourceNotice({ metadata }: DataSourceNoticeProps) {
           <li>2021年以降は令和2年国勢調査基準の人口推計です。</li>
         </ul>
         <dl className="source-meta">
-          <div><dt>データ生成日時</dt><dd>{generatedAt}</dd></div>
+          <div>
+            <dt>データ生成日時</dt>
+            <dd>
+              <time aria-label="データ生成日時" dateTime={metadata.generatedAt}>
+                {formatDateTime(metadata.generatedAt)}（JST）
+              </time>
+            </dd>
+          </div>
           <div><dt>統計表ID</dt><dd>{metadata.statsDataIds.map((id) => <code key={id}>{id}</code>)}</dd></div>
         </dl>
       </div>
